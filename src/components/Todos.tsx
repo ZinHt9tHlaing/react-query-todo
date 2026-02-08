@@ -1,7 +1,12 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useCreateTodo, useUpdateTodo } from "../mutations/todo-mutations";
+import {
+  useCreateTodo,
+  useDeleteTodo,
+  useUpdateTodo,
+} from "../mutations/todo-mutations";
 import { useTodoIds, useTodos } from "../queries/todo-queries";
 import type { Todo } from "../types/todoTypes";
+import { toast } from "react-toastify";
 
 const Todos = () => {
   const { data: todoIds, isLoading, isError } = useTodoIds();
@@ -9,6 +14,7 @@ const Todos = () => {
 
   const createTodoMutation = useCreateTodo();
   const updateTodoMutation = useUpdateTodo();
+  const deleteTodoMutation = useDeleteTodo();
 
   const { register, handleSubmit, reset } = useForm<Todo>();
 
@@ -21,6 +27,13 @@ const Todos = () => {
     if (data) {
       updateTodoMutation.mutate({ ...data, checked: true });
     }
+  };
+
+  const handleDeleteTodo = async (id: number) => {
+    const confirmed = window.confirm("Are you sure?");
+    if (!confirmed) return;
+    await deleteTodoMutation.mutateAsync(id);
+    toast.success("Todo deleted successfully");
   };
 
   if (isLoading) return <span>Loading...</span>;
@@ -65,11 +78,20 @@ const Todos = () => {
             </span>
             <div>
               <button
-                disabled={updateTodoMutation.isPending}
+                disabled={data?.checked}
                 onClick={() => handleMarkAsDoneSubmit(data)}
               >
                 {data?.checked ? "Done" : "Mark as done"}
               </button>
+              {data && data.id && (
+                <button
+                  onClick={() => handleDeleteTodo(data?.id)}
+                  disabled={deleteTodoMutation.isPending}
+                  style={{ backgroundColor: "red", color: "white" }}
+                >
+                  Delete
+                </button>
+              )}
             </div>
           </li>
         ))}

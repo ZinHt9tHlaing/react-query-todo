@@ -21,3 +21,8 @@ export const updateTodo = async (data: Todo) => {
   const res = await apiInstance.put<Todo>(`/todos/${data.id}`, data);
   return res.data;
 };
+
+export const deleteTodo = async (id: number) => {
+  const res = await apiInstance.delete<Todo>(`/todos/${id}`);
+  return res.data;
+};
