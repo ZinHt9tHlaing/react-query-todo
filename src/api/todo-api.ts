@@ -16,3 +16,8 @@ export const createTodo = async (data: Todo) => {
   const res = await apiInstance.post<Todo>("/todos", data);
   return res.data;
 };
+
+export const updateTodo = async (data: Todo) => {
+  const res = await apiInstance.put<Todo>(`/todos/${data.id}`, data);
+  return res.data;
+};

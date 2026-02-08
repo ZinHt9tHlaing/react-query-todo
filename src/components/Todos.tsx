@@ -1,5 +1,5 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useCreateTodo } from "../mutations/todo-mutations";
+import { useCreateTodo, useUpdateTodo } from "../mutations/todo-mutations";
 import { useTodoIds, useTodos } from "../queries/todo-queries";
 import type { Todo } from "../types/todoTypes";
 
@@ -7,13 +7,20 @@ const Todos = () => {
   const { data: todoIds, isLoading, isError } = useTodoIds();
   const todoQueries = useTodos(todoIds);
 
-  const { mutate, isPending } = useCreateTodo();
+  const createTodoMutation = useCreateTodo();
+  const updateTodoMutation = useUpdateTodo();
 
   const { register, handleSubmit, reset } = useForm<Todo>();
 
   const handleCreateTodoSubmit: SubmitHandler<Todo> = (data) => {
-    mutate(data);
+    createTodoMutation.mutate(data);
     reset();
+  };
+
+  const handleMarkAsDoneSubmit = (data: Todo | undefined) => {
+    if (data) {
+      updateTodoMutation.mutate({ ...data, checked: true });
+    }
   };
 
   if (isLoading) return <span>Loading...</span>;
@@ -43,8 +50,8 @@ const Todos = () => {
         <br />
         <input
           type="submit"
-          disabled={isPending}
-          value={isPending ? "Creating..." : "Create Todo"}
+          disabled={createTodoMutation.isPending}
+          value={createTodoMutation.isPending ? "Creating..." : "Create Todo"}
         />
       </form>
 
@@ -56,6 +63,14 @@ const Todos = () => {
               Title: <strong>{data?.title}</strong> <br />
               Description: <strong>{data?.description}</strong>
             </span>
+            <div>
+              <button
+                disabled={updateTodoMutation.isPending}
+                onClick={() => handleMarkAsDoneSubmit(data)}
+              >
+                {data?.checked ? "Done" : "Mark as done"}
+              </button>
+            </div>
           </li>
         ))}
       </ul>
