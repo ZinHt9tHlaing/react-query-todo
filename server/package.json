@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "start": "nodemon server.js"
+  },
+  "devDependencies": {
+    "json-server": "^0.17.4"
+  }
+}
