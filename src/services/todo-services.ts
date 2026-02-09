@@ -1,5 +1,5 @@
 import type { Todo } from "../types/todoTypes";
-import { apiInstance } from "./client";
+import { apiInstance } from "../api/client";
 
 export const getTodosIds = async () => {
   const res = await apiInstance.get<Todo[]>("/todos");

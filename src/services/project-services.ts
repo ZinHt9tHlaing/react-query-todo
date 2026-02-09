@@ -1,5 +1,5 @@
 import type { Project } from "../types/projectTypes";
-import { apiInstance } from "./client";
+import { apiInstance } from "../api/client";
 
 export const getProjects = async (page = 1) => {
   const res = await apiInstance.get<Project[]>(
