@@ -1,9 +1,11 @@
-import Todos from "./components/Todos";
+import Projects from "./components/Projects";
+// import Todos from "./components/Todos";
 
 const App = () => {
   return (
     <div>
-      <Todos />
+      {/* <Todos /> */}
+      <Projects />
     </div>
   );
 };
